@@ -96,3 +96,37 @@ resource "aws_eks_node_group" "main" {
     aws_iam_role_policy_attachment.ecr_read_only_policy,
   ]
 }
+
+# ==================================================================================================
+# SECURITY GROUP RULES FOR INGRESS
+# ==================================================================================================
+
+# Cho phép traffic từ mọi nơi vào cổng NodePort của Ingress Controller (nếu dùng NodePort)
+# Hoặc mở rộng hơn là cho phép mọi traffic nội bộ trong VPC
+resource "aws_security_group_rule" "allow_all_internal" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["10.0.0.0/16"] # Dải IP của VPC
+  security_group_id = aws_eks_cluster.main.vpc_config[0].cluster_security_group_id
+}
+
+# Cho phép traffic HTTP từ Internet (cho Load Balancer Health Check nếu cần)
+resource "aws_security_group_rule" "allow_http_from_internet" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_eks_cluster.main.vpc_config[0].cluster_security_group_id
+}
+
+resource "aws_security_group_rule" "allow_https_from_internet" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_eks_cluster.main.vpc_config[0].cluster_security_group_id
+}

@@ -38,7 +38,9 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${var.project_name}-public-subnet-${count.index + 1}"
+    Name                                              = "${var.project_name}-public-subnet-${count.index + 1}"
+    "kubernetes.io/role/elb"                          = "1"      # Tag cho Public Load Balancer
+    "kubernetes.io/cluster/${var.project_name}-cluster" = "shared" # Tag để EKS nhận diện subnet này thuộc về nó
   }
 }
 
@@ -73,9 +75,9 @@ resource "aws_subnet" "private" {
   availability_zone = var.availability_zones[count.index]
 
   tags = {
-    Name                                = "${var.project_name}-private-subnet-${count.index + 1}"
-    "kubernetes.io/cluster/${var.project_name}-eks" = "shared" # Tag cần thiết cho EKS
-    "kubernetes.io/role/internal-elb"            = "1"      # Tag cần thiết cho Internal Load Balancer
+    Name                                              = "${var.project_name}-private-subnet-${count.index + 1}"
+    "kubernetes.io/cluster/${var.project_name}-cluster" = "shared" # Tag cần thiết cho EKS
+    "kubernetes.io/role/internal-elb"                 = "1"      # Tag cần thiết cho Internal Load Balancer
   }
 }
 
