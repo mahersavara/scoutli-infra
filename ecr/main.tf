@@ -11,6 +11,7 @@ provider "aws" {
 resource "aws_ecr_repository" "auth_service" {
   name                 = "${var.project_name}-auth-service"
   image_tag_mutability = "MUTABLE"
+  force_delete         = true
   image_scanning_configuration {
     scan_on_push = true
   }
@@ -24,6 +25,7 @@ resource "aws_ecr_repository" "auth_service" {
 resource "aws_ecr_repository" "discovery_service" {
   name                 = "${var.project_name}-discovery-service"
   image_tag_mutability = "MUTABLE"
+  force_delete         = true
   image_scanning_configuration {
     scan_on_push = true
   }
@@ -37,6 +39,7 @@ resource "aws_ecr_repository" "discovery_service" {
 resource "aws_ecr_repository" "interaction_service" {
   name                 = "${var.project_name}-interaction-service"
   image_tag_mutability = "MUTABLE"
+  force_delete         = true
   image_scanning_configuration {
     scan_on_push = true
   }
@@ -50,6 +53,7 @@ resource "aws_ecr_repository" "interaction_service" {
 resource "aws_ecr_repository" "frontend" {
   name                 = "${var.project_name}-frontend"
   image_tag_mutability = "MUTABLE"
+  force_delete         = true
   image_scanning_configuration {
     scan_on_push = true
   }
